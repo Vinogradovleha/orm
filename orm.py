@@ -7,7 +7,9 @@ class Filter(object):
         self.param2 = param2
         super(Filter, self).__init__()
 
-    def compare(self):
+
+class CMPFilter(Filter):
+    def to_sql(self):
         return repr(self.param1) + '=' + repr(self.param2)
 
 
@@ -19,7 +21,7 @@ class Field(object):
         super(Field, self).__init__()
 
     def __eq__(self, other):
-        return Filter(self, other).compare()
+        return CMPFilter(self, other).to_sql()
 
     def __repr__(self):
         return self.tablename + '.' + self.fieldname
