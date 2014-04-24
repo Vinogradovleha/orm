@@ -1,6 +1,16 @@
 __author__ = 'vinogradov'
 
 
+class Filter(object):
+    def __init__(self, param1, param2):
+        self.param1 = param1
+        self.param2 = param2
+        super(Filter, self).__init__()
+
+    def compare(self):
+        return repr(self.param1) + '=' + repr(self.param2)
+
+
 class Field(object):
 
     def __init__(self, tablename, fieldname):
@@ -9,7 +19,7 @@ class Field(object):
         super(Field, self).__init__()
 
     def __eq__(self, other):
-        return self, other
+        return Filter(self, other).compare()
 
     def __repr__(self):
         return self.tablename + '.' + self.fieldname
@@ -36,16 +46,10 @@ class ModelParser(object):
         self.filter_section = None
 
         for item in args:
-            filtr = repr(item[0]) + ' = '
-            if type(item[1]) == int:
-                filtr += str(item[1])
-            else:
-                filtr += repr(item[1])
-
             if self.filter_section is None:
-                self.filter_section = 'WHERE ' + filtr
+                self.filter_section = 'WHERE ' + item
             else:
-                self.filter_section += ' AND ' + filtr
+                self.filter_section += ' AND ' + item
 
         print(self.filter_section)
 
